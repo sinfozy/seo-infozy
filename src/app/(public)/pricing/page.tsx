@@ -1,68 +1,41 @@
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
+import { Check, Sparkles } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Check } from "lucide-react";
 import { useState } from "react";
 
 export default function PricingSection() {
   const [currency, setCurrency] = useState<"INR" | "USD">("INR");
-  const [planType, setPlanType] = useState<"Pro" | "Advance">("Pro");
 
-  // Pricing Data for Pro & Advance
+  // Pricing Data with Searches per duration (Pro)
   const pricingData = {
     Pro: {
       INR: {
         symbol: "₹",
         prices: {
-          "1": { price: 799, save: 0 },
-          "3": { price: 2499, save: 200 },
-          "6": { price: 4699, save: 700 },
-          "12": { price: 7999, save: 2400 },
+          "1": { price: 799, save: 0, searches: 50 },
+          "3": { price: 2499, save: 200, searches: 180 },
+          "6": { price: 4699, save: 700, searches: 400 },
+          "12": { price: 7999, save: 2400, searches: 950 },
         },
       },
       USD: {
         symbol: "$",
         prices: {
-          "1": { price: 11, save: 0 },
-          "3": { price: 30, save: 3 },
-          "6": { price: 56, save: 8 },
-          "12": { price: 100, save: 29 },
+          "1": { price: 11, save: 0, searches: 50 },
+          "3": { price: 30, save: 3, searches: 180 },
+          "6": { price: 56, save: 8, searches: 400 },
+          "12": { price: 100, save: 29, searches: 950 },
         },
       },
       features: [
-        "50 search/day",
-        "15k export/day",
-        "2 User Access",
+        "AI-powered SEO with Infyra Search (Unlimited)",
+        "Business & Industry-based Responses",
+        "Live Chat & 24/7 Support",
         "Email Support",
-      ],
-    },
-    Advance: {
-      INR: {
-        symbol: "₹",
-        prices: {
-          "1": { price: 1599, save: 0 },
-          "3": { price: 4599, save: 400 },
-          "6": { price: 7999, save: 1400 },
-          "12": { price: 14999, save: 4800 },
-        },
-      },
-      USD: {
-        symbol: "$",
-        prices: {
-          "1": { price: 20, save: 0 },
-          "3": { price: 55, save: 5 },
-          "6": { price: 100, save: 15 },
-          "12": { price: 180, save: 40 },
-        },
-      },
-      features: [
-        "100 search/day",
-        "20k export/day",
-        "3 User Access",
-        "Priority Support",
       ],
     },
   };
@@ -77,34 +50,24 @@ export default function PricingSection() {
   return (
     <main className="py-20 px-4 bg-gradient-to-br from-emerald-50 via-white to-teal-50">
       <div className="max-w-7xl mx-auto">
-        {/* Header Tabs */}
-        <div className="flex justify-center mb-8">
-          <div className="flex bg-white rounded-xl shadow-lg border border-emerald-100 overflow-hidden">
-            <div
-              onClick={() => setPlanType("Pro")}
-              className={`px-8 py-4 cursor-pointer transition-colors font-semibold ${
-                planType === "Pro"
-                  ? "bg-gradient-to-r from-emerald-100 to-teal-100 text-emerald-800"
-                  : "text-gray-600 hover:bg-gray-50"
-              }`}
-            >
-              Pro
-            </div>
-            <div
-              onClick={() => setPlanType("Advance")}
-              className={`px-8 py-4 cursor-pointer transition-colors font-semibold ${
-                planType === "Advance"
-                  ? "bg-gradient-to-r from-emerald-100 to-teal-100 text-emerald-800"
-                  : "text-gray-600 hover:bg-gray-50"
-              }`}
-            >
-              Advance (more search)
-            </div>
-          </div>
+        {/* Header */}
+        <div className="text-center mb-12">
+          <h1 className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent flex justify-center items-center gap-2">
+            <Sparkles className="w-8 h-8 text-emerald-500" />
+            Infyra Search
+          </h1>
+          <p className="text-lg text-gray-700 mt-4 max-w-2xl mx-auto">
+            Supercharge your SEO with{" "}
+            <span className="font-semibold text-emerald-700">
+              Infyra Search AI
+            </span>
+            — delivering business data insights and industry-based responses to
+            help you grow smarter and faster.
+          </p>
         </div>
 
         {/* Currency Toggle */}
-        <div className="flex justify-center mb-8">
+        <div className="flex justify-center mb-10">
           <div className="flex bg-white rounded-lg shadow-md border border-emerald-200 p-1">
             <button
               onClick={() => setCurrency("INR")}
@@ -129,31 +92,40 @@ export default function PricingSection() {
           </div>
         </div>
 
-        {/* Plan Title */}
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent mb-6">
-            {planType.toUpperCase()} PLAN
-          </h2>
-
-          {/* Features Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto">
-            {pricingData[planType].features.map((feature, index) => (
-              <div
-                key={index}
-                className="flex items-center gap-2 text-gray-700"
-              >
-                <Check className="w-5 h-5 text-emerald-500 flex-shrink-0" />
-                <span className="text-sm font-medium">{feature}</span>
-              </div>
-            ))}
-          </div>
+        {/* Features */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl mx-auto mb-12">
+          {pricingData.Pro.features.map((feature, index) => (
+            <div
+              key={index}
+              className="flex items-center gap-2 text-gray-700 justify-center md:justify-start"
+            >
+              <Check className="w-5 h-5 text-emerald-500 flex-shrink-0" />
+              <span className="text-sm font-medium">{feature}</span>
+            </div>
+          ))}
         </div>
+
+        {/* Free Trial */}
+        <Card className="max-w-3xl mx-auto mb-12 border-2 border-emerald-400 shadow-lg">
+          <CardContent className="p-8 text-center">
+            <h3 className="text-2xl font-bold text-emerald-700 mb-3">
+              Start with a 7-Day Free Trial
+            </h3>
+            <p className="text-gray-600 mb-6">
+              Explore Infyra Search with full access to AI-powered SEO insights.{" "}
+              <span className="font-bold">No credit card required.</span>
+            </p>
+            <Button className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-semibold px-8 py-3 shadow-lg">
+              Start Free Trial
+            </Button>
+          </CardContent>
+        </Card>
 
         {/* Pricing Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
           {plans.map((plan) => {
             const priceData =
-              pricingData[planType][currency].prices[
+              pricingData.Pro[currency].prices[
                 plan.duration as keyof typeof pricingData.Pro.INR.prices
               ];
             return (
@@ -176,10 +148,13 @@ export default function PricingSection() {
                     {plan.label}
                   </h3>
 
-                  <div className="mb-8">
+                  <div className="mb-4">
                     <div className="text-4xl font-bold text-gray-900 mb-2">
-                      {pricingData[planType][currency].symbol}
+                      {pricingData.Pro[currency].symbol}
                       {priceData.price.toLocaleString()}
+                    </div>
+                    <div className="text-sm text-gray-600">
+                      {priceData.searches} searches
                     </div>
                   </div>
 
@@ -194,7 +169,7 @@ export default function PricingSection() {
                   </Button>
 
                   <div className="mt-4 text-sm text-gray-500">
-                    Save {pricingData[planType][currency].symbol}
+                    Save {pricingData.Pro[currency].symbol}
                     {priceData.save.toLocaleString()}
                   </div>
                 </CardContent>
@@ -204,14 +179,17 @@ export default function PricingSection() {
         </div>
 
         {/* Bottom CTA */}
-        <div className="text-center mt-16">
+        <div className="text-center mt-20">
           <h3 className="text-2xl font-bold text-gray-900 mb-4">
-            Grow organic traffic with our SEO tool !!
+            AI + SEO = Infyra Advantage 🚀
           </h3>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            Join thousands of businesses already using our powerful SEO
-            analytics platform to boost their search rankings and drive more
-            organic traffic.
+            Join thousands of businesses already using{" "}
+            <span className="font-semibold text-emerald-700">
+              Infyra Search
+            </span>{" "}
+            to uncover growth opportunities, get industry-level insights, and
+            drive more organic traffic.
           </p>
         </div>
       </div>
