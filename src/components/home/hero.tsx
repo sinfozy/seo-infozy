@@ -2,6 +2,7 @@ import { BarChart3, Edit3, MapPin, Search } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import Link from "next/link";
 
 export function HeroSection() {
   return (
@@ -58,8 +59,11 @@ export function HeroSection() {
         </div>
 
         <div className="text-center">
-          <Button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full">
-            Start Free Trial Today 🚀
+          <Button
+            asChild
+            className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full"
+          >
+            <Link href="/signup">Start 7 Days Free Trial 🚀</Link>
           </Button>
         </div>
       </div>

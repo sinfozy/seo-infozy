@@ -1,22 +1,33 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { User } from "@/models/user";
+import { auth } from "@/auth";
 import { getJson } from "serpapi";
-
-// import { auth } from "@/auth";
 
 export async function GET(req: NextRequest) {
   try {
-    // const session = await auth();
-    // if (!session) {
-    //   return NextResponse.json({ message: "Unauthorized" }, { status: 403 });
-    // }
+    const session = await auth();
+    if (!session || !session.user._id) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 403 });
+    }
 
+    const user = await User.findById(session.user._id);
+
+    if (!user) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 403 });
+    }
+    if (!(await user.canUseWebsiteSearch())) {
+      return NextResponse.json(
+        { message: "You have reached your search limit." },
+        { status: 403 }
+      );
+    }
     const { searchParams } = new URL(req.url);
     const domain = searchParams.get("domain");
 
     if (!domain) {
       return NextResponse.json(
-        { error: "Domain is required" },
+        { message: "Domain is required" },
         { status: 400 }
       );
     }
@@ -26,6 +37,9 @@ export async function GET(req: NextRequest) {
       q: `site:${domain}`,
       api_key: process.env.SERPAPI_KEY,
     });
+
+    user.incrementWebsiteSearch(domain);
+    await user.save();
 
     return NextResponse.json(serpResponse.organic_results || []);
   } catch (err) {

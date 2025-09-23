@@ -3,6 +3,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import Providers from "@/components/Providers";
+import { auth } from "@/auth";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -15,21 +16,17 @@ export const metadata: Metadata = {
   description: "SEO Infozy - Your Ultimate SEO Companion",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // const session = await auth();
+  const session = await auth();
 
   return (
     <html lang="en">
       <body className={`${poppins.variable} antialiased font-sans`}>
-        <Providers
-        //  session={session}
-        >
-          {children}
-        </Providers>
+        <Providers session={session}>{children}</Providers>
       </body>
     </html>
   );

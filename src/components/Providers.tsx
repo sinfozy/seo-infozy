@@ -2,27 +2,24 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
+import { Session } from "next-auth";
+import { SessionProvider } from "next-auth/react";
 import { Toaster } from "./ui/sonner";
 import { useState } from "react";
 
-// import { Session } from "next-auth";
-// import { SessionProvider } from "next-auth/react";
-
 export default function Providers({
   children,
-  // session,
+  session,
 }: {
   children: React.ReactNode;
-  // session: Session | null;
+  session: Session | null;
 }) {
   const [client] = useState(() => new QueryClient());
 
   return (
-    // <SessionProvider session={session}>
-    <>
+    <SessionProvider session={session}>
       <QueryClientProvider client={client}>{children}</QueryClientProvider>
       <Toaster position="top-center" />
-    </>
-    // </SessionProvider>
+    </SessionProvider>
   );
 }

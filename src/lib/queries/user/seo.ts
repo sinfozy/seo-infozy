@@ -1,5 +1,7 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 import axiosInstance from "@/lib/axios";
-import { useQuery } from "@tanstack/react-query";
+import { sendError } from "@/lib/helpers/error-response";
 
 interface OrganicResult {
   position: number;
@@ -8,16 +10,23 @@ interface OrganicResult {
   snippet: string;
 }
 
-export const useGetWebsiteResearch = (domain?: string) => {
-  return useQuery<OrganicResult[]>({
-    queryKey: ["website-research", domain],
-    queryFn: async () => {
+export const useWebsiteResearch = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationKey: ["website-research"],
+    mutationFn: async (domain: string): Promise<OrganicResult[]> => {
       if (!domain) return [];
       const res = await axiosInstance.get(
         `/seo/website-search?domain=${domain}`
       );
       return res.data || [];
     },
-    enabled: !!domain,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["user-plan"] });
+    },
+    onError: (error) => {
+      sendError(error);
+    },
   });
 };

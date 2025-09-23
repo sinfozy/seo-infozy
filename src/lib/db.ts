@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
-
-// import { seedPlans } from "./seedPlans";
+import { seedPlans } from "./seedPlans";
 
 type ConnectionObj = {
   isConnected?: number;
@@ -24,7 +23,7 @@ const connectDB = async (): Promise<void> => {
     console.log("DB Connected!");
 
     // Seed plans right after connecting
-    // await seedPlans();
+    await seedPlans();
   } catch (err) {
     console.error("dbConnection failed: ", err);
     throw err;

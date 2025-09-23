@@ -2,6 +2,7 @@ import { RocketIcon, Star } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import Link from "next/link";
 
 export function MainHeroSection() {
   const clientLogos = [
@@ -53,8 +54,11 @@ export function MainHeroSection() {
 
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
-          <Button className="bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-full text-lg shadow-lg">
-            Start Free Trial Today 🚀
+          <Button
+            asChild
+            className="bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-full text-lg shadow-lg"
+          >
+            <Link href="/signup">Start 7 Days Free Trial 🚀</Link>
           </Button>
         </div>
 

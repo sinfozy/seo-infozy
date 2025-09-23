@@ -1,6 +1,6 @@
 "use client";
 
-import { BarChart3, Globe, Link2, Loader2 } from "lucide-react";
+import { BarChart3, Globe, Loader2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -16,16 +16,25 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
-import { useGetWebsiteResearch } from "@/lib/queries/user/seo";
+import { toast } from "sonner";
+import { useWebsiteResearch } from "@/lib/queries/user/seo";
 
 export default function Page() {
   const [url, setUrl] = useState("");
   const [domain, setDomain] = useState<string | undefined>(undefined);
 
-  const { data: results = [], isLoading } = useGetWebsiteResearch(domain);
+  const {
+    mutate: runSearch,
+    data: results = [],
+    isPending,
+  } = useWebsiteResearch();
 
   const handleSearch = () => {
-    if (!url) return;
+    if (!url) {
+      toast.error("Please enter a domain.");
+      return;
+    }
+    runSearch(url);
     setDomain(url);
   };
 
@@ -81,11 +90,11 @@ export default function Page() {
           />
           <Button
             onClick={handleSearch}
-            disabled={isLoading}
+            disabled={isPending}
             className="bg-primary text-primary-foreground"
           >
-            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            {isLoading ? "Searching..." : "Search"}
+            {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            {isPending ? "Searching..." : "Search"}
           </Button>
         </div>
 

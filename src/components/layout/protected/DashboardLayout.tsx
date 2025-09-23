@@ -1,14 +1,22 @@
 "use client";
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Currency, Plan } from "@/types/enums";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  LayoutDashboardIcon,
+  LogOutIcon,
+  ShieldCheckIcon,
+  UserIcon,
+  Wallet,
+} from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -17,25 +25,38 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { signOut, useSession } from "next-auth/react";
 
 import { Button } from "@/components/ui/button";
 import { DashboardSidebarLinks } from "./DashboardSidebarLinks";
 import Link from "next/link";
+import { Loader } from "@/components/ui/loader";
 import Logo from "@/components/ui/logo";
-import { useState } from "react";
-
-// import { signOut } from "next-auth/react";
+import { RemainingSearches } from "@/components/RemainingSearches";
+import { TrialTimer } from "@/components/TrialTimer";
+import { useGetUserPlan } from "@/lib/queries/user/plan";
+import { useGetWallet } from "@/lib/queries/wallet";
+import { useRouter } from "next/navigation";
 
 export default function DashboardLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const router = useRouter();
+  const session = useSession();
+  const userId = session?.data?.user?._id || "";
+
+  const { data: userPlan, isPending: isGettingUserPlan } = useGetUserPlan();
+
+  // Fetch wallet data
+  const { data: wallet, isPending: isGettingWallet } = useGetWallet(
+    userId,
+    "User"
+  );
 
   const handleLogout = async () => {
-    setIsDialogOpen(false);
-    // await signOut({ callbackUrl: "/admin/login" });
+    await signOut({ callbackUrl: "/login" });
   };
 
   return (
@@ -60,31 +81,80 @@ export default function DashboardLayout({
             <h1 className="text-lg font-medium">Dashboard</h1>
           </div>
 
-          {/* Logout Button */}
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger asChild>
-              <Button variant="outline">Logout</Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Confirm Logout</DialogTitle>
-                <DialogDescription>
-                  Are you sure you want to log out?
-                </DialogDescription>
-              </DialogHeader>
-              <DialogFooter className="flex justify-end gap-2">
-                <Button
-                  variant="outline"
-                  onClick={() => setIsDialogOpen(false)}
+          {/* Right Side: Wallet + Profile */}
+          <div className="flex items-center gap-4">
+            {!isGettingUserPlan && userPlan?.name === Plan.TRIAL && (
+              <TrialTimer
+                planEndsAt={userPlan.planEndsAt}
+                planName={userPlan.name}
+              />
+            )}
+
+            {!isGettingUserPlan && userPlan && (
+              <div className="hidden md:block">
+                <RemainingSearches
+                  planName={userPlan.name}
+                  totalSearches={userPlan.totalSearches}
+                  remainingSearches={userPlan.remainingSearches}
+                />
+              </div>
+            )}
+
+            {/* Wallet Button */}
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-10 flex items-center gap-2 cursor-pointer"
+              onClick={() => router.push("/wallet")}
+            >
+              <Wallet className="h-5 w-5" />
+              {isGettingWallet ? (
+                <Loader className="h-4 w-4 text-muted-foreground" />
+              ) : (
+                `${wallet?.currency === Currency.USD ? "$" : "₹"} ${wallet?.balance?.toFixed(2) || "0.00"}`
+              )}
+            </Button>
+
+            {/* Profile Dropdown Menu */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <div className="min-h-12 w-auto aspect-square flex items-center justify-center rounded-full bg-transparent border border-primary cursor-pointer">
+                  <Avatar className="h-full w-full">
+                    <AvatarImage src="/profile.png" alt="Profile" />
+                    <AvatarFallback className="bg-muted">GP</AvatarFallback>
+                  </Avatar>
+                </div>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-48" align="end">
+                <DropdownMenuLabel className="font-semibold">
+                  Account
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => router.push("/pricing")}>
+                  <ShieldCheckIcon className="h-4 w-4 mr-2" />
+                  Upgrade Plan
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => router.push("/dashboard/website-search")}
                 >
-                  Cancel
-                </Button>
-                <Button variant="destructive" onClick={handleLogout}>
+                  <LayoutDashboardIcon className="h-4 w-4 mr-2" />
+                  Dashboard
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => router.push("/profile")}>
+                  <UserIcon className="h-4 w-4 mr-2" />
+                  Profile
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={handleLogout}
+                  className="text-red-500 focus:text-red-600"
+                >
+                  <LogOutIcon className="h-4 w-4 mr-2" />
                   Logout
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </header>
 
         <main className="min-h-[calc(100vh-80px)] flex-1 p-4 md:p-8 bg-muted/30">
