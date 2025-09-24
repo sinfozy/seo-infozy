@@ -13,6 +13,7 @@ export interface IReseller extends Document {
   notes?: string;
 
   isActive?: boolean;
+  walletId?: mongoose.Types.ObjectId | null;
 
   currency: Currency;
 
@@ -41,6 +42,8 @@ const ResellerSchema: Schema<IReseller> = new Schema(
     avatar: { type: String, default: "" },
 
     notes: { type: String, default: "" },
+
+    walletId: { type: Schema.Types.ObjectId, ref: "Wallet", default: null },
 
     isActive: { type: Boolean, default: true },
 

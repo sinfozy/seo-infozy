@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
 
     const session = await auth();
     if (!session?.user?._id) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
     await connectDB();
@@ -66,14 +66,14 @@ export async function PUT(req: NextRequest) {
 
     const session = await auth();
     if (!session?.user?._id) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
     const body = await req.json();
     const parsed = updateProfileSchema.safeParse(body);
     if (!parsed.success) {
       const errorTree = z.treeifyError(parsed.error);
-      return NextResponse.json({ error: errorTree }, { status: 400 });
+      return NextResponse.json({ message: errorTree }, { status: 400 });
     }
 
     const { fullname, username, phone } = parsed.data;

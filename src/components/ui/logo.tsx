@@ -1,4 +1,4 @@
-export default function Logo({ className }: { className?: string }) {
+export default function Logo() {
   return (
     <div className="w-fit flex items-center gap-1 border p-1 rounded-md">
       <span className="text-2xl font-bold text-blue-600">SEO</span>

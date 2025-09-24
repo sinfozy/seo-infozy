@@ -25,7 +25,7 @@ export async function GET(
 
     if (!ownerModel) {
       return NextResponse.json(
-        { error: "ownerModel query param is required" },
+        { message: "ownerModel query param is required" },
         { status: 400 }
       );
     }
@@ -36,14 +36,17 @@ export async function GET(
     const wallet = await Wallet.findOne({ ownerId, ownerModel });
 
     if (!wallet) {
-      return NextResponse.json({ error: "Wallet not found" }, { status: 404 });
+      return NextResponse.json(
+        { message: "Wallet not found" },
+        { status: 404 }
+      );
     }
 
     // Conversion rate
     const USD_TO_INR = Number(process.env.USD_RATE);
     if (isNaN(USD_TO_INR) || USD_TO_INR <= 0) {
       return NextResponse.json(
-        { error: "USD_RATE environment variable is not set or invalid." },
+        { message: "USD_RATE environment variable is not set or invalid." },
         { status: 500 }
       );
     }
@@ -94,7 +97,7 @@ export async function GET(
   } catch (err) {
     console.error("Error wallet fetch:", err);
     return NextResponse.json(
-      { error: "Something went wrong. Please try again later." },
+      { message: "Something went wrong. Please try again later." },
       { status: 500 }
     );
   }

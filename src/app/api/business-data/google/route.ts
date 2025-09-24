@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
 
     if (!query || !location) {
       return NextResponse.json(
-        { error: "Query and location are required" },
+        { message: "Query and location are required" },
         { status: 400 }
       );
     }
@@ -58,7 +58,7 @@ export async function POST(req: NextRequest) {
   } catch (err) {
     console.error("Error fetching business data:", err);
     return NextResponse.json(
-      { error: "Something went wrong. Please try again later." },
+      { message: "Something went wrong. Please try again later." },
       { status: 500 }
     );
   }

@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
 
     if (!token || !password || !email) {
       return NextResponse.json(
-        { error: "Token, email, and password are required" },
+        { message: "Token, email, and password are required" },
         { status: 400 }
       );
     }
@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
 
     if (!user) {
       return NextResponse.json(
-        { error: "Invalid or expired reset token" },
+        { message: "Invalid or expired reset token" },
         { status: 400 }
       );
     }
@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
   } catch (error: unknown) {
     console.error("Reset Password Error:", error);
     return NextResponse.json(
-      { error: "Something went wrong" },
+      { message: "Something went wrong" },
       { status: 500 }
     );
   }

@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
 
     if (!ownerId || !ownerModel || !amount || amount <= 0) {
       return NextResponse.json(
-        { error: "Missing required fields" },
+        { message: "Missing required fields" },
         { status: 400 }
       );
     }
@@ -32,7 +32,10 @@ export async function POST(req: NextRequest) {
 
     const wallet = await Wallet.findOne({ ownerId, ownerModel });
     if (!wallet)
-      return NextResponse.json({ error: "Wallet not found" }, { status: 404 });
+      return NextResponse.json(
+        { message: "Wallet not found" },
+        { status: 404 }
+      );
 
     const shortOwnerId = ownerId.toString().slice(-6);
     const receipt = `w-${shortOwnerId}-${Date.now()}`;
@@ -66,7 +69,7 @@ export async function POST(req: NextRequest) {
   } catch (err) {
     console.error("Error wallet recharge:", err);
     return NextResponse.json(
-      { error: "Something went wrong. Please try again later." },
+      { message: "Something went wrong. Please try again later." },
       { status: 500 }
     );
   }

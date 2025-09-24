@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
     // Send OTP email
     const res = await sendEmail({
       to: user.email,
-      subject: "Welcome to AI Infozy",
+      subject: "Welcome to SEO Infozy",
       templateName: "welcome",
       data: {
         name: user.fullname,

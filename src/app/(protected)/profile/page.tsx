@@ -58,7 +58,7 @@ export default function ProfilePage() {
       toast.error("You must be logged in to access the profile page.");
       router.push("/login");
     }
-  }, [status]);
+  }, [status, router]);
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),

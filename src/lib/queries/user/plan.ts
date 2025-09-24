@@ -12,13 +12,14 @@ export interface UserPlan {
   remainingSearches: number | null;
 }
 
-export function useGetUserPlan() {
+export function useGetUserPlan({ enabled = true } = {}) {
   return useQuery({
     queryKey: ["user-plan"],
     queryFn: async () => {
       const res = await axiosInstance.get("/plan");
       return res.data.plan as UserPlan | null;
     },
+    enabled,
   });
 }
 

@@ -29,7 +29,9 @@ export function Header() {
     "User"
   );
 
-  const { data: userPlan, isLoading: isGettingPlan } = useGetUserPlan();
+  const { data: userPlan, isLoading: isGettingPlan } = useGetUserPlan({
+    enabled: isLoggedIn,
+  });
 
   useEffect(() => {
     if (

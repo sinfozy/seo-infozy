@@ -45,7 +45,7 @@ export async function GET(req: NextRequest) {
   } catch (err) {
     console.error("Error wallet fetch:", err);
     return NextResponse.json(
-      { error: "Something went wrong. Please try again later." },
+      { message: "Something went wrong. Please try again later." },
       { status: 500 }
     );
   }

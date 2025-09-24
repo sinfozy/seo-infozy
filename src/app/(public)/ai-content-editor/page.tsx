@@ -6,14 +6,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import {
-  BarChart,
-  CheckCircle,
-  FileText,
-  Type,
-  Users,
-  Zap,
-} from "lucide-react";
+import { BarChart, CheckCircle, FileText, Type, Users } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
 import Image from "next/image";

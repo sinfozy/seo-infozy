@@ -1,7 +1,7 @@
 import { Plan } from "../types/enums";
 import { PlanModel } from "../models/plan";
 
-const defaultPlans = [
+export const defaultPlans = [
   {
     name: Plan.TRIAL,
     price: 0,

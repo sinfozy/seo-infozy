@@ -5,7 +5,7 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const q = searchParams.get("q");
     if (!q) {
-      return NextResponse.json({ error: "Missing query" }, { status: 400 });
+      return NextResponse.json({ message: "Missing query" }, { status: 400 });
     }
 
     const res = await fetch(
@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
   } catch (err) {
     console.error(err);
     return NextResponse.json(
-      { error: "Failed to fetch locations" },
+      { message: "Failed to fetch locations" },
       { status: 500 }
     );
   }

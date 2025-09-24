@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
       !razorpay_signature
     ) {
       return NextResponse.json(
-        { error: "Missing required fields" },
+        { message: "Missing required fields" },
         { status: 400 }
       );
     }
@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
 
     if (generatedSignature !== razorpay_signature) {
       return NextResponse.json(
-        { error: "Invalid payment signature" },
+        { message: "Invalid payment signature" },
         { status: 400 }
       );
     }
@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
     });
     if (!payment) {
       return NextResponse.json(
-        { error: "Payment record not found" },
+        { message: "Payment record not found" },
         { status: 404 }
       );
     }
@@ -77,7 +77,10 @@ export async function POST(req: NextRequest) {
     // Step 4: Credit Wallet
     const wallet = await Wallet.findOne({ ownerId, ownerModel });
     if (!wallet) {
-      return NextResponse.json({ error: "Wallet not found" }, { status: 404 });
+      return NextResponse.json(
+        { message: "Wallet not found" },
+        { status: 404 }
+      );
     }
 
     await wallet.credit(
@@ -90,7 +93,7 @@ export async function POST(req: NextRequest) {
   } catch (err) {
     console.error("Error verifying payment:", err);
     return NextResponse.json(
-      { error: "Something went wrong. Please try again later." },
+      { message: "Something went wrong. Please try again later." },
       { status: 500 }
     );
   }

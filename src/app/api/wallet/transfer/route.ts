@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
 
     if (!fromId || !fromModel || !toId || !toModel || !amount || !by) {
       return NextResponse.json(
-        { error: "Missing required fields" },
+        { message: "Missing required fields" },
         { status: 400 }
       );
     }
@@ -38,10 +38,13 @@ export async function POST(req: NextRequest) {
     });
 
     if (!fromWallet || !toWallet)
-      return NextResponse.json({ error: "Wallet not found" }, { status: 404 });
+      return NextResponse.json(
+        { message: "Wallet not found" },
+        { status: 404 }
+      );
     if (fromWallet.balance < amount)
       return NextResponse.json(
-        { error: "Insufficient balance" },
+        { message: "Insufficient balance" },
         { status: 400 }
       );
 
@@ -56,7 +59,7 @@ export async function POST(req: NextRequest) {
   } catch (err) {
     console.error("Error transfer:", err);
     return NextResponse.json(
-      { error: "Something went wrong. Please try again later." },
+      { message: "Something went wrong. Please try again later." },
       { status: 500 }
     );
   }
