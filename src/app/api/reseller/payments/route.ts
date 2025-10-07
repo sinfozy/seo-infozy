@@ -18,7 +18,14 @@ export async function GET(req: NextRequest) {
 
     await connectDB();
 
-    const resellerId = session.user.id;
+    const resellerId = session.user._id;
+
+    if (!resellerId || typeof resellerId !== "string") {
+      return NextResponse.json(
+        { message: "Reseller ID not found in session." },
+        { status: 400 }
+      );
+    }
 
     // Find all users belonging to this reseller
     const users = await User.find({ resellerId }).select("_id fullname").lean();
